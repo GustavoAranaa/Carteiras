@@ -3,6 +3,7 @@ package com.gustavoarana.carteirinhadigital2devest.core.designsystem.component
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,12 +19,19 @@ fun NavigationButton(
     Button(
         modifier = modifier,
         onClick = onClick,
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(12.dp), // Cantos arredondados alinhados ao design Warm Sand
         border = BorderStroke(
-            width = 2.dp,
-            color = MaterialTheme.colorScheme.secondary
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outline
+        ),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,       // Castanho SandPrimary
+            contentColor = MaterialTheme.colorScheme.onPrimary        // Texto claro
         )
     ) {
-        Text(text = text)
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelLarge
+        )
     }
 }

@@ -36,32 +36,96 @@ fun NavGraphBuilder.professorNavGraph(
     onSessaoAusente: () -> Unit,
     onPerfilInvalido: (PerfilAcesso) -> Unit
 ) {
-    navigation(startDestination = ProfessorRoutes.HOME, route = GraphRoutes.PROFESSOR) {
+    navigation(
+        startDestination = ProfessorRoutes.HOME,
+        route = GraphRoutes.PROFESSOR
+    ) {
         composable(ProfessorRoutes.HOME) {
-            ProfileGuard(usuarioFlow = usuarioLogadoFlow, perfilEsperado = PerfilAcesso.PROFESSOR, onSessaoAusente = onSessaoAusente, onPerfilInvalido = onPerfilInvalido) { usuario ->
-                AppShell(title = "Início", usuarioLogado = usuario, canNavigateBack = false, darkTheme = darkTheme, onDarkThemeChange = onDarkThemeChange, onNavigateBack = {}, onLogout = onLogout) { innerPadding ->
-                    HomeProfessorScreen(usuarioLogado = usuario,
+            ProfileGuard(
+                usuarioFlow = usuarioLogadoFlow,
+                perfilEsperado = PerfilAcesso.PROFESSOR,
+                onSessaoAusente = onSessaoAusente,
+                onPerfilInvalido = onPerfilInvalido
+            ) { usuario ->
+                AppShell(
+                    title = "Início",
+                    usuarioLogado = usuario,
+                    canNavigateBack = false,
+                    darkTheme = darkTheme,
+                    onDarkThemeChange = onDarkThemeChange,
+                    onNavigateBack = {},
+                    onLogout = onLogout
+                ) { innerPadding ->
+                    HomeProfessorScreen(
+                        usuarioLogado = usuario,
                         onTurmasClick = { navController.navigate(ProfessorRoutes.TURMAS) },
                         onUnidadesCurricularesClick = { navController.navigate(ProfessorRoutes.UNIDADES_CURRICULARES) },
-                        modifier = Modifier.fillMaxSize().padding(innerPadding))
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    )
                 }
             }
         }
+
         composable(ProfessorRoutes.TURMAS) {
-            ProfileGuard(usuarioFlow = usuarioLogadoFlow, perfilEsperado = PerfilAcesso.PROFESSOR, onSessaoAusente = onSessaoAusente, onPerfilInvalido = onPerfilInvalido) { usuario ->
-                val factory = remember(turmaProfessorRepository) { TurmasProfessorViewModelFactory(turmaProfessorRepository) }
+            ProfileGuard(
+                usuarioFlow = usuarioLogadoFlow,
+                perfilEsperado = PerfilAcesso.PROFESSOR,
+                onSessaoAusente = onSessaoAusente,
+                onPerfilInvalido = onPerfilInvalido
+            ) { usuario ->
+                val factory = remember(turmaProfessorRepository) {
+                    TurmasProfessorViewModelFactory(turmaProfessorRepository)
+                }
                 val vm: TurmasProfessorViewModel = viewModel(factory = factory)
-                AppShell(title = "Minhas Turmas", usuarioLogado = usuario, canNavigateBack = true, darkTheme = darkTheme, onDarkThemeChange = onDarkThemeChange, onNavigateBack = { navController.popBackStack() }, onLogout = onLogout) { innerPadding ->
-                    TurmasProfessorScreen(vm, Modifier.fillMaxSize().padding(innerPadding))
+
+                AppShell(
+                    title = "Minhas Turmas",
+                    usuarioLogado = usuario,
+                    canNavigateBack = true,
+                    darkTheme = darkTheme,
+                    onDarkThemeChange = onDarkThemeChange,
+                    onNavigateBack = { navController.popBackStack() },
+                    onLogout = onLogout
+                ) { innerPadding ->
+                    TurmasProfessorScreen(
+                        viewModel = vm,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    )
                 }
             }
         }
+
         composable(ProfessorRoutes.UNIDADES_CURRICULARES) {
-            ProfileGuard(usuarioFlow = usuarioLogadoFlow, perfilEsperado = PerfilAcesso.PROFESSOR, onSessaoAusente = onSessaoAusente, onPerfilInvalido = onPerfilInvalido) { usuario ->
-                val factory = remember(unidadeCurricularProfessorRepository) { UnidadesCurricularesProfessorViewModelFactory(unidadeCurricularProfessorRepository) }
+            ProfileGuard(
+                usuarioFlow = usuarioLogadoFlow,
+                perfilEsperado = PerfilAcesso.PROFESSOR,
+                onSessaoAusente = onSessaoAusente,
+                onPerfilInvalido = onPerfilInvalido
+            ) { usuario ->
+                val factory = remember(unidadeCurricularProfessorRepository) {
+                    UnidadesCurricularesProfessorViewModelFactory(unidadeCurricularProfessorRepository)
+                }
                 val vm: UnidadesCurricularesProfessorViewModel = viewModel(factory = factory)
-                AppShell(title = "Unidades Curriculares", usuarioLogado = usuario, canNavigateBack = true, darkTheme = darkTheme, onDarkThemeChange = onDarkThemeChange, onNavigateBack = { navController.popBackStack() }, onLogout = onLogout) { innerPadding ->
-                    UnidadesCurricularesProfessorScreen(vm, Modifier.fillMaxSize().padding(innerPadding))
+
+                AppShell(
+                    title = "Unidades Curriculares",
+                    usuarioLogado = usuario,
+                    canNavigateBack = true,
+                    darkTheme = darkTheme,
+                    onDarkThemeChange = onDarkThemeChange,
+                    onNavigateBack = { navController.popBackStack() },
+                    onLogout = onLogout
+                ) { innerPadding ->
+                    UnidadesCurricularesProfessorScreen(
+                        viewModel = vm,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    )
                 }
             }
         }

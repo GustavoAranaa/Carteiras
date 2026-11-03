@@ -25,7 +25,7 @@ fun PerfilAluno(
     matricula: String,
     curso: String,
     idFoto: Int =
-        R.drawable.login
+        R.drawable.img_4
 ) {
 
     Column(

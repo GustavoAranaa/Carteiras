@@ -1,4 +1,3 @@
-
 package com.gustavoarana.carteirinhadigital2devest.feature.professor.home.presentation.screen
 
 import androidx.compose.foundation.background
@@ -17,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Groups
-import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,8 +34,6 @@ import androidx.compose.ui.unit.dp
 import com.gustavoarana.carteirinhadigital2devest.core.designsystem.theme.CarteirinhaDigital2DEVESTTheme
 import com.gustavoarana.carteirinhadigital2devest.feature.login.domain.model.PerfilAcesso
 import com.gustavoarana.carteirinhadigital2devest.feature.login.domain.model.UsuarioLogado
-
-private val RoxoCarteirinha = Color(0xFF5A00FC)
 
 @Composable
 fun HomeProfessorScreen(
@@ -61,7 +56,7 @@ fun HomeProfessorScreen(
             Text(
                 text = "ÁREA DO PROFESSOR",
                 style = MaterialTheme.typography.labelMedium,
-                color = RoxoCarteirinha,
+                color = MaterialTheme.colorScheme.primary, // Castanho do tema
                 fontWeight = FontWeight.Bold
             )
 
@@ -104,13 +99,13 @@ fun HomeProfessorScreen(
                         modifier = Modifier
                             .size(54.dp)
                             .clip(RoundedCornerShape(17.dp))
-                            .background(RoxoCarteirinha.copy(alpha = 0.14f)),
+                            .background(MaterialTheme.colorScheme.primaryContainer), // Quadrado Bege
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.WorkspacePremium,
                             contentDescription = "Perfil de professor",
-                            tint = RoxoCarteirinha,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer, // Ícone Castanho
                             modifier = Modifier.size(30.dp)
                         )
                     }
@@ -180,7 +175,7 @@ fun HomeProfessorScreen(
                 Icon(
                     imageVector = Icons.Default.Groups,
                     contentDescription = null,
-                    tint = RoxoCarteirinha,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer, // Ícone Castanho
                     modifier = Modifier.size(28.dp)
                 )
             }
@@ -193,7 +188,7 @@ fun HomeProfessorScreen(
                 Icon(
                     imageVector = Icons.Default.Book,
                     contentDescription = null,
-                    tint = RoxoCarteirinha,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer, // Ícone Castanho
                     modifier = Modifier.size(28.dp)
                 )
             }
@@ -230,7 +225,7 @@ private fun AtalhoProfessor(
                 modifier = Modifier
                     .size(52.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(RoxoCarteirinha.copy(alpha = 0.12f)),
+                    .background(MaterialTheme.colorScheme.primaryContainer), // Quadrado Bege
                 contentAlignment = Alignment.Center
             ) {
                 icone()

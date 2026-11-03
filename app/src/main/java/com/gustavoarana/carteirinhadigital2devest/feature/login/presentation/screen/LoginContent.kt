@@ -1,4 +1,3 @@
-
 package com.gustavoarana.carteirinhadigital2devest.feature.login.presentation.screen
 
 import androidx.compose.foundation.Image
@@ -28,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -39,9 +37,6 @@ import com.gustavoarana.carteirinhadigital2devest.R
 import com.gustavoarana.carteirinhadigital2devest.core.designsystem.theme.CarteirinhaDigital2DEVESTTheme
 import com.gustavoarana.carteirinhadigital2devest.feature.login.presentation.LoginEvent
 import com.gustavoarana.carteirinhadigital2devest.feature.login.presentation.LoginUiState
-
-private val RoxoCarteirinha = Color(0xFF5A00FC)
-private val RoxoEscuro = Color(0xFF3800A8)
 
 @Composable
 fun LoginContent(
@@ -73,7 +68,7 @@ fun LoginContent(
             verticalArrangement = Arrangement.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.logo_carteirinha),
+                painter = painterResource(id = R.drawable.img_2),
                 contentDescription = "Logo Carteirinha Digital",
                 modifier = Modifier.size(100.dp)
             )
@@ -103,10 +98,10 @@ fun LoginContent(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(28.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = colorScheme.surface
+                    containerColor = colorScheme.surfaceContainerLow
                 ),
                 elevation = CardDefaults.cardElevation(
-                    defaultElevation = 6.dp
+                    defaultElevation = 4.dp
                 )
             ) {
                 Column(
@@ -119,7 +114,7 @@ fun LoginContent(
                         text = "Bem-vindo!",
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
-                        color = RoxoCarteirinha
+                        color = colorScheme.primary // Castanho elegante
                     )
 
                     Text(
@@ -139,9 +134,9 @@ fun LoginContent(
                         isError = uiState.credentialError,
                         shape = RoundedCornerShape(14.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = RoxoCarteirinha,
-                            focusedLabelColor = RoxoCarteirinha,
-                            cursorColor = RoxoCarteirinha,
+                            focusedBorderColor = colorScheme.primary,
+                            focusedLabelColor = colorScheme.primary,
+                            cursorColor = colorScheme.primary,
                             focusedTextColor = colorScheme.onSurface,
                             unfocusedTextColor = colorScheme.onSurface,
                             unfocusedBorderColor = colorScheme.outline,
@@ -163,9 +158,9 @@ fun LoginContent(
                         isError = uiState.credentialError,
                         shape = RoundedCornerShape(14.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = RoxoCarteirinha,
-                            focusedLabelColor = RoxoCarteirinha,
-                            cursorColor = RoxoCarteirinha,
+                            focusedBorderColor = colorScheme.primary,
+                            focusedLabelColor = colorScheme.primary,
+                            cursorColor = colorScheme.primary,
                             focusedTextColor = colorScheme.onSurface,
                             unfocusedTextColor = colorScheme.onSurface,
                             unfocusedBorderColor = colorScheme.outline,
@@ -195,14 +190,14 @@ fun LoginContent(
                             .height(54.dp),
                         shape = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = RoxoCarteirinha,
-                            contentColor = Color.White
+                            containerColor = colorScheme.primary,
+                            contentColor = colorScheme.onPrimary
                         )
                     ) {
                         if (uiState.isLoading) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(24.dp),
-                                color = Color.White,
+                                color = colorScheme.onPrimary,
                                 strokeWidth = 2.dp
                             )
                         } else {

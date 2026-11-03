@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,14 +14,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -34,13 +44,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.gustavoarana.carteirinhadigital2devest.feature.professor.turmas.domain.model.TurmaProfessor
 import com.gustavoarana.carteirinhadigital2devest.feature.professor.turmas.presentation.TurmasProfessorViewModel
-
-private val RoxoTurmas = Color(0xFF5A00FC)
 
 @Composable
 fun TurmasProfessorScreen(
@@ -52,6 +62,8 @@ fun TurmasProfessorScreen(
     var pesquisa by remember { mutableStateOf("") }
     var filtroSelecionado by remember { mutableStateOf("Todas") }
     var ordenacaoSelecionada by remember { mutableStateOf("Nome") }
+
+    val brandBrown = MaterialTheme.colorScheme.primary
 
     LaunchedEffect(viewModel) {
         viewModel.carregar()
@@ -98,14 +110,7 @@ fun TurmasProfessorScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        CircularProgressIndicator(color = RoxoTurmas)
-                        Text(
-                            text = "Carregando suas turmas...",
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(top = 12.dp)
-                        )
-                    }
+                    CircularProgressIndicator(color = brandBrown)
                 }
             }
 
@@ -119,13 +124,6 @@ fun TurmasProfessorScreen(
                 ) {
                     Text("⚠️", style = MaterialTheme.typography.headlineLarge)
                     Text(
-                        text = "Não foi possível carregar",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                    Text(
                         text = state.errorMessage!!,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(top = 8.dp)
@@ -133,44 +131,9 @@ fun TurmasProfessorScreen(
                     Button(
                         onClick = { viewModel.carregar() },
                         modifier = Modifier.padding(top = 16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = RoxoTurmas
-                        )
+                        colors = ButtonDefaults.buttonColors(containerColor = brandBrown)
                     ) {
                         Text("Tentar novamente")
-                    }
-                }
-            }
-
-            state.turmas.isEmpty() -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text("📚", style = MaterialTheme.typography.displaySmall)
-                    Text(
-                        text = "Nenhuma turma encontrada",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(top = 12.dp)
-                    )
-                    Text(
-                        text = "As turmas vinculadas ao seu perfil aparecerão aqui.",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                    Button(
-                        onClick = { viewModel.carregar() },
-                        modifier = Modifier.padding(top = 16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = RoxoTurmas
-                        )
-                    ) {
-                        Text("Atualizar turmas")
                     }
                 }
             }
@@ -178,205 +141,109 @@ fun TurmasProfessorScreen(
             else -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                        horizontal = 20.dp,
-                        vertical = 18.dp
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    // Novo Cabeçalho com Stats Compactos
                     item {
-                        Column {
+                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             Text(
-                                text = "ÁREA DO PROFESSOR",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = RoxoTurmas,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = "Minhas Turmas",
+                                text = "Painel do Professor",
                                 style = MaterialTheme.typography.headlineMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground,
-                                modifier = Modifier.padding(top = 6.dp)
+                                color = MaterialTheme.colorScheme.onBackground
                             )
-                            Text(
-                                text = "Organize suas turmas e acompanhe suas aulas.",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)
-                            )
-                        }
-                    }
 
-                    item {
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(22.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = RoxoTurmas
-                            ),
-                            elevation = CardDefaults.cardElevation(
-                                defaultElevation = 3.dp
-                            )
-                        ) {
+                            // Cards de Métricas Lado a Lado
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(18.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = "Visão geral",
-                                        color = Color.White.copy(alpha = 0.85f),
-                                        style = MaterialTheme.typography.bodyMedium
-                                    )
-                                    Text(
-                                        text = "${state.turmas.size} ${
-                                            if (state.turmas.size == 1) "turma" else "turmas"
-                                        } vinculadas",
-                                        color = Color.White,
-                                        style = MaterialTheme.typography.titleLarge,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.padding(top = 4.dp)
-                                    )
-                                    Text(
-                                        text = "Total de alunos: ${
-                                            state.turmas.sumOf { it.quantidadeAlunos }
-                                        }",
-                                        color = Color.White.copy(alpha = 0.9f),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        modifier = Modifier.padding(top = 6.dp)
-                                    )
-                                }
-                                Text(
-                                    text = "🎓",
-                                    style = MaterialTheme.typography.displaySmall
+                                StatCard(
+                                    title = "Turmas Active",
+                                    value = "${state.turmas.size}",
+                                    modifier = Modifier.weight(1f)
+                                )
+                                StatCard(
+                                    title = "Total Alunos",
+                                    value = "${state.turmas.sumOf { it.quantidadeAlunos }}",
+                                    modifier = Modifier.weight(1f)
                                 )
                             }
                         }
                     }
 
+                    // Campo de Pesquisa Compacto
                     item {
                         OutlinedTextField(
                             value = pesquisa,
                             onValueChange = { pesquisa = it },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true,
-                            shape = RoundedCornerShape(16.dp),
-                            label = { Text("Pesquisar turma") },
-                            placeholder = { Text("Nome do curso ou código") },
-                            leadingIcon = { Text("🔎") },
+                            shape = RoundedCornerShape(12.dp),
+                            placeholder = { Text("Buscar turma ou código...") },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Default.Search,
+                                    contentDescription = null,
+                                    tint = brandBrown
+                                )
+                            },
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = RoxoTurmas,
-                                focusedLabelColor = RoxoTurmas,
-                                cursorColor = RoxoTurmas,
-                                focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                                focusedContainerColor = MaterialTheme.colorScheme.surface,
-                                unfocusedContainerColor = MaterialTheme.colorScheme.surface
+                                focusedBorderColor = brandBrown,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.outline
                             )
                         )
                     }
 
+                    // Barra Horizontal de Filtros
                     item {
-                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text(
-                                text = "Filtrar turmas",
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                listOf("Todas", "Com alunos", "Sem alunos").forEach { filtro ->
-                                    FilterChip(
-                                        selected = filtroSelecionado == filtro,
-                                        onClick = { filtroSelecionado = filtro },
-                                        label = { Text(filtro) }
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            items(listOf("Todas", "Com alunos", "Sem alunos")) { filtro ->
+                                FilterChip(
+                                    selected = filtroSelecionado == filtro,
+                                    onClick = { filtroSelecionado = filtro },
+                                    label = { Text(filtro) },
+                                    shape = RoundedCornerShape(10.dp),
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = brandBrown,
+                                        selectedLabelColor = MaterialTheme.colorScheme.onPrimary
                                     )
-                                }
+                                )
                             }
                         }
                     }
 
                     item {
-                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Text(
-                                text = "Ordenar por",
+                                text = "${turmasFiltradas.size} turma(s) encontrada(s)",
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                listOf("Nome", "Código", "Alunos").forEach { ordem ->
-                                    FilterChip(
-                                        selected = ordenacaoSelecionada == ordem,
-                                        onClick = { ordenacaoSelecionada = ordem },
-                                        label = { Text(ordem) }
-                                    )
-                                }
-                                Spacer(modifier = Modifier.weight(1f))
-                                Button(
-                                    onClick = { viewModel.carregar() },
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = RoxoTurmas
-                                    ),
-                                    shape = RoundedCornerShape(12.dp)
-                                ) {
-                                    Text("↻")
-                                }
-                            }
-                        }
-                    }
 
-                    item {
-                        Text(
-                            text = "${turmasFiltradas.size} resultado(s)",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-
-                    if (turmasFiltradas.isEmpty()) {
-                        item {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 28.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
+                            IconButton(
+                                onClick = { viewModel.carregar() },
+                                modifier = Modifier.size(32.dp)
                             ) {
-                                Text("🔎", style = MaterialTheme.typography.displaySmall)
-                                Text(
-                                    text = "Nenhuma turma corresponde à pesquisa",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.padding(top = 8.dp)
+                                Icon(
+                                    Icons.Default.Refresh,
+                                    contentDescription = "Atualizar",
+                                    tint = brandBrown
                                 )
-                                Button(
-                                    onClick = {
-                                        pesquisa = ""
-                                        filtroSelecionado = "Todas"
-                                    },
-                                    modifier = Modifier.padding(top = 12.dp),
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = RoxoTurmas
-                                    )
-                                ) {
-                                    Text("Limpar pesquisa e filtros")
-                                }
                             }
                         }
-                    } else {
-                        items(
-                            items = turmasFiltradas,
-                            key = { it.id }
-                        ) { turma ->
-                            TurmaCard(turma)
-                        }
+                    }
+
+                    items(
+                        items = turmasFiltradas,
+                        key = { it.id }
+                    ) { turma ->
+                        TurmaCardModerno(turma = turma, brandBrown = brandBrown)
                     }
                 }
             }
@@ -385,53 +252,118 @@ fun TurmasProfessorScreen(
 }
 
 @Composable
-private fun TurmaCard(turma: TurmaProfessor) {
+private fun StatCard(
+    title: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+@Composable
+private fun TurmaCardModerno(
+    turma: TurmaProfessor,
+    brandBrown: Color
+) {
     val scheme = MaterialTheme.colorScheme
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = scheme.surface
-        ),
-        border = BorderStroke(1.dp, scheme.outlineVariant),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = scheme.surface),
+        border = BorderStroke(1.dp, scheme.outlineVariant)
     ) {
         Column(
-            modifier = Modifier.padding(18.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .background(
-                            color = scheme.secondaryContainer,
-                            shape = RoundedCornerShape(15.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "🎓",
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                }
-
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = turma.codigo,
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = scheme.onSurface
                     )
                     Text(
                         text = turma.curso,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Medium,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = scheme.onSurfaceVariant
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(brandBrown)
+                        .padding(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = turma.semestre,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = scheme.onPrimary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Default.People,
+                        contentDescription = null,
+                        tint = brandBrown,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.size(6.dp))
+                    Text(
+                        text = "${turma.quantidadeAlunos} alunos",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = scheme.onSurface
+                    )
+                }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Default.CalendarToday,
+                        contentDescription = null,
+                        tint = brandBrown,
+                        modifier = Modifier.size(14.dp)
+                    )
+                    Spacer(modifier = Modifier.size(6.dp))
+                    Text(
+                        text = turma.diasSemana.joinToString(", ") {
+                            it.lowercase().replaceFirstChar { c -> c.uppercase() }
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = scheme.onSurface
                     )
                 }
             }
@@ -439,80 +371,13 @@ private fun TurmaCard(turma: TurmaProfessor) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(1.dp)
-                    .background(scheme.outlineVariant)
-            )
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("📅")
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 10.dp)
-                ) {
-                    Text(
-                        text = "Semestre",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = scheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = turma.semestre,
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = scheme.onSurface
-                    )
-                }
-            }
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("👥")
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 10.dp)
-                ) {
-                    Text(
-                        text = "Alunos matriculados",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = scheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = "${turma.quantidadeAlunos} ${
-                            if (turma.quantidadeAlunos == 1) "aluno" else "alunos"
-                        }",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = scheme.onSurface
-                    )
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        scheme.surfaceVariant,
-                        RoundedCornerShape(14.dp)
-                    )
-                    .padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(scheme.surfaceVariant)
+                    .padding(vertical = 8.dp, horizontal = 12.dp)
             ) {
                 Text(
-                    text = "HORÁRIOS DAS AULAS",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = RoxoTurmas
-                )
-                Text(
-                    text = turma.diasSemana.joinToString(", ") {
-                        it.lowercase().replaceFirstChar { letra -> letra.uppercase() }
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = scheme.onSurface
-                )
-                Text(
-                    text = "${turma.horarioInicio} – ${turma.horarioFim}",
-                    style = MaterialTheme.typography.bodyLarge,
+                    text = "Aulas: ${turma.horarioInicio} – ${turma.horarioFim}",
+                    style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
                     color = scheme.onSurface
                 )

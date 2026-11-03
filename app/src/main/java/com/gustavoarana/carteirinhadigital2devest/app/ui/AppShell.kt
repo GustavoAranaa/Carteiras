@@ -1,4 +1,3 @@
-
 package com.gustavoarana.carteirinhadigital2devest.app.ui
 
 import androidx.compose.foundation.Image
@@ -16,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.DrawerDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -29,6 +29,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -62,7 +63,9 @@ fun AppShell(
         drawerState = drawerState,
         gesturesEnabled = true,
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet(
+                drawerContainerColor = MaterialTheme.colorScheme.surfaceContainerLow // Fundo bege suave para o menu lateral
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
@@ -73,7 +76,7 @@ fun AppShell(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.login),
+                        painter = painterResource(id = R.drawable.img_4),
                         contentDescription = "Avatar do usuário",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -81,7 +84,7 @@ fun AppShell(
                             .clip(CircleShape)
                             .border(
                                 width = 2.dp,
-                                color = MaterialTheme.colorScheme.primary,
+                                color = MaterialTheme.colorScheme.primary, // Borda castanha no avatar
                                 shape = CircleShape
                             )
                     )
@@ -91,7 +94,8 @@ fun AppShell(
                     Text(
                         text = usuarioLogado.nome,
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     Text(
@@ -101,7 +105,7 @@ fun AppShell(
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
-                    HorizontalDivider()
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
                     Row(
                         modifier = Modifier
@@ -111,7 +115,8 @@ fun AppShell(
                     ) {
                         Text(
                             text = "Tema escuro",
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                            color = MaterialTheme.colorScheme.onSurface
                         )
 
                         Switch(
@@ -120,7 +125,7 @@ fun AppShell(
                         )
                     }
 
-                    HorizontalDivider()
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                     Spacer(modifier = Modifier.weight(1f))
 
                     OutlinedButton(
@@ -142,8 +147,17 @@ fun AppShell(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(title)
+                        Text(
+                            text = title,
+                            fontWeight = FontWeight.Bold
+                        )
                     },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background, // Fundo bege da barra superior
+                        titleContentColor = MaterialTheme.colorScheme.onBackground, // Texto "Início" em tom escuro
+                        navigationIconContentColor = MaterialTheme.colorScheme.onBackground, // Ícone ≡ ou Voltar
+                        actionIconContentColor = MaterialTheme.colorScheme.onBackground
+                    ),
                     navigationIcon = {
                         if (canNavigateBack) {
                             IconButton(
